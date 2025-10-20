@@ -133,10 +133,9 @@ const MessageList = ({ messages, isTyping, pills = [], onPillClick }: MessageLis
 
         {/* Pills: when chat has messages, show under the last message; when empty show at top */}
         {pills && pills.length > 0 && (
-          <div className={`mt-2 ${messages.length === 0 ? 'mb-4' : ''}`}>
+          <div className={`mt-2 ${messages.length === 0 ? 'mb-4' : 'mb-2'}`}>
             <div className="w-full">
-              {/* PillBar will be styled separately */}
-              <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-2 px-2">
+              <div className="flex flex-wrap gap-2 items-center overflow-visible px-1 pb-3">
                 {pills.map((pill, idx) => (
                   <button
                     key={idx}

@@ -46,12 +46,12 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-3">
+      <div className="flex-1 overflow-y-auto p-3 pb-24">
         <ChatContainer messages={messages} isTyping={isTyping} files={files} pills={pills} onPillClick={setInputValue} />
       </div>
 
       {/* Input area */}
-      <div className="p-3 border-t">
+  <div className="p-3 border-t mt-1">
 
         <ChatInput
           value={inputValue}
