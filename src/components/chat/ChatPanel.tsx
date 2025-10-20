@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useChatState } from "@/hooks/useChatState";
 import ChatContainer from "./ChatContainer";
 import ChatInput from "./ChatInput";
+import PillBar from "./PillBar";
 
 type ChatPanelProps = {
   variant?: string;
@@ -52,6 +53,12 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
 
       {/* Input area */}
       <div className="p-3 border-t">
+        {pills.length > 0 && (
+          <div className="mb-2">
+            <PillBar pills={pills} onPillClick={setInputValue} />
+          </div>
+        )}
+
         <ChatInput
           value={inputValue}
           onChange={setInputValue}
