@@ -119,7 +119,7 @@ const MessageList = ({ messages, isTyping, pills = [], onPillClick }: MessageLis
     );
   };
 
-  const containerClasses = "flex flex-col flex-1 p-8 w-full";
+  const containerClasses = "flex flex-col flex-1 pt-8 pb-8 w-full";
 
   return (
     <div className={containerClasses}>

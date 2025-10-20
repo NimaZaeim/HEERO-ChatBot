@@ -41,7 +41,7 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
       <div className="flex items-center justify-between px-4 py-3 border-b">
         <div className="flex items-center gap-3">
           <img src="/heero-favicon.png" alt="logo" className="w-8 h-8 object-contain" />
-          <div className="text-sm font-semibold">Heero Chat</div>
+          <div className="text-sm font-semibold">HEERO Chat</div>
         </div>
         <div className="flex items-center gap-2">
           <button
