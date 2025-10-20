@@ -38,9 +38,11 @@ export type MessageFile = {
 type MessageListProps = {
   messages: Message[]; // Array of messages to display in the chat
   isTyping: boolean; // Indicates if the AI is currently typing a response
+  pills?: string[];
+  onPillClick?: (pill: string) => void;
 };
 
-const MessageList = ({ messages, isTyping }: MessageListProps) => {
+const MessageList = ({ messages, isTyping, pills = [], onPillClick }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to the bottom of the message list whenever messages change or when typing status updates
@@ -119,14 +121,36 @@ const MessageList = ({ messages, isTyping }: MessageListProps) => {
 
   const containerClasses =
     messages.length === 0 && !isTyping
-      ? "flex flex-col justify-center items-center min-h-full p-2 md:p-4" // If no messages and not typing, center the content
+      ? "flex flex-col justify-start items-start min-h-full p-2 md:p-4" // If no messages and not typing, show pills at top (left-aligned)
       : "flex flex-col px-2 pt-9 pb-40 md:px-2 md:pt-4 md:pb-30 max-w-4xl mx-auto"; // Otherwise, use the standard chat layout
 
   return (
     <div className={containerClasses}>
       <div className="text-sm md:text-base w-full">
         {messages.map(renderMessage)}
+
         {isTyping && <TypingIndicator />}
+
+        {/* Pills: when chat has messages, show under the last message; when empty show at top */}
+        {pills && pills.length > 0 && (
+          <div className={`mt-2 ${messages.length === 0 ? 'mb-4' : ''}`}>
+            <div className="w-full">
+              {/* PillBar will be styled separately */}
+              <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-2 px-2">
+                {pills.map((pill, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => onPillClick?.(pill)}
+                    className="text-xs px-2 py-1 rounded-full bg-[color:var(--secondary-lightblue)] shadow-sm text-[color:var(--neutral-dark)] hover:bg-[color:var(--secondary-accent)] whitespace-nowrap border-none"
+                  >
+                    {pill}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
       <div ref={messagesEndRef} />
     </div>

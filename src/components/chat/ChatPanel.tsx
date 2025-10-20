@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { useChatState } from "@/hooks/useChatState";
 import ChatContainer from "./ChatContainer";
 import ChatInput from "./ChatInput";
-import PillBar from "./PillBar";
 
 type ChatPanelProps = {
   variant?: string;
@@ -48,16 +47,11 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-3">
-        <ChatContainer messages={messages} isTyping={isTyping} files={files} />
+        <ChatContainer messages={messages} isTyping={isTyping} files={files} pills={pills} onPillClick={setInputValue} />
       </div>
 
       {/* Input area */}
       <div className="p-3 border-t">
-        {pills.length > 0 && (
-          <div className="mb-2">
-            <PillBar pills={pills} onPillClick={setInputValue} />
-          </div>
-        )}
 
         <ChatInput
           value={inputValue}

@@ -7,13 +7,15 @@ type ChatContainerProps = {
   messages: Message[];
   isTyping: boolean;
   files?: File[];
+  pills?: string[];
+  onPillClick?: (pill: string) => void;
 };
 
-const ChatContainer = ({ messages, isTyping, files }: ChatContainerProps) => {
+const ChatContainer = ({ messages, isTyping, files, pills = [], onPillClick }: ChatContainerProps) => {
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-y-auto">
-        <MessageList messages={messages} isTyping={isTyping} />
+        <MessageList messages={messages} isTyping={isTyping} pills={pills} onPillClick={onPillClick} />
       </div>
     </div>
   );
