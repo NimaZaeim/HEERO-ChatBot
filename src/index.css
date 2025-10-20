@@ -40,7 +40,7 @@
   }
 
   body {
-    background-color: var(--primary-light);
+    background-color: transparent;
     color: var(--neutral-dark);
   }
 
