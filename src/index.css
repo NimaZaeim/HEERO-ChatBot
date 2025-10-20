@@ -1,0 +1,146 @@
+/* This file is used to define global styles and Tailwind CSS configurations.
+   It includes custom colors, animations, and scrollbar styles.
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Design System Colors */
+    --primary-300: #87CEEB; /* Primary - 300 (Light Blue) */
+    --solar-spirit: #F0A83C; /* Solar Spirit (Orange) */
+    --white: #FFFFFF; /* White */
+    --white-300: #F5F5F5; /* White - 300 (Light Gray) */
+    --radial: #000000; /* Radial (Black) */
+    
+    /* Legacy color mappings for compatibility */
+    --neutral-dark: #000000; /* Updated to Radial */
+    --neutral-grey: #6b7280; /* Medium Grey */
+    --neutral-light: #ffffff; /* White */
+    --primary-blue: #87CEEB; /* Updated to Primary-300 */
+    --primary-light: #f8fafc; /* Light Background */
+    --secondary-darkblue: #000000; /* Updated to Radial */
+    --secondary-lightblue: #87CEEB; /* Updated to Primary-300 */
+    --secondary-accent: #F0A83C; /* Updated to Solar Spirit */
+    --primary-hover: #6BB6D6; /* Darker shade of Primary-300 */
+    --primary-creme: #F0A83C; /* Updated to Solar Spirit */
+    --transparent-50: rgba(255, 255, 255, 0.5); /* Transparent White 50%*/
+    --transparent-20: rgba(255, 255, 255, 0.2); /* Transparent White 20%*/
+    --transparent-10: rgba(255, 255, 255, 0.1); /* Transparent White 10% */
+    --dark-transparent: rgba(0, 0, 0, 0.3); /* Transparent Black 30% */
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    background-color: var(--primary-light);
+    color: var(--neutral-dark);
+  }
+
+  /* Apply specific styles for HTML content in chat bubbles */
+  .chat-content p {
+    @apply mb-2 last:mb-0;
+  }
+
+  .chat-content ul {
+    @apply mb-2 list-disc pl-6;
+  }
+
+  .chat-content ol {
+    @apply mb-2 list-decimal pl-6;
+  }
+
+  .chat-content a {
+    @apply text-primary underline hover:opacity-80;
+  }
+
+  .chat-content strong {
+    @apply font-semibold;
+  }
+
+  .chat-content li {
+    @apply mb-1;
+  }
+
+  .chat-content h3 {
+    @apply font-bold text-lg mb-2;
+  }
+}
+
+/* Animation classes for typing indicator */
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.delay-0 {
+  animation-delay: 0ms;
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-scale-up {
+  animation: scaleUp 180ms cubic-bezier(.2,.9,.3,1) both;
+}
+
+/* New message slide/fade */
+@keyframes slideFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.message-enter {
+  animation: slideFadeIn 220ms ease-out both;
+}
+
+/* Responsive tweaks for widget */
+@media (max-width: 420px) {
+  .w-\[360px\] { width: calc(100vw - 32px) !important; }
+  .h-\[520px\] { height: calc(70vh) !important; }
+}
+
+.delay-150 {
+  animation-delay: 150ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+/* Scrollbar Styling === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--transparent-10);
+  border-radius: 100px;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+
+/* Firefox */
+* {
+  scrollbar-width: medium;
+  scrollbar-color: var(--transparent-10) transparent;
+}
