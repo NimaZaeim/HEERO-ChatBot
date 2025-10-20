@@ -14,7 +14,7 @@ type ChatContainerProps = {
 const ChatContainer = ({ messages, isTyping, files, pills = [], onPillClick }: ChatContainerProps) => {
   return (
     <div className="h-full flex flex-col">
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1">
         <MessageList messages={messages} isTyping={isTyping} pills={pills} onPillClick={onPillClick} />
       </div>
     </div>

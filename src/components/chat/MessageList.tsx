@@ -66,7 +66,7 @@ const MessageList = ({ messages, isTyping, pills = [], onPillClick }: MessageLis
         key={message.id}
         className={`${
           message.isUser ? "items-end" : "items-start"
-        } flex flex-col w-full mb-4 md:mb-2 message-enter`}
+        } flex flex-col w-full mb-2 md:mb-1 message-enter`}
       >
         {message.files?.length > 0 && ( // If the message has files, render them in a bubble
           <div
@@ -119,10 +119,7 @@ const MessageList = ({ messages, isTyping, pills = [], onPillClick }: MessageLis
     );
   };
 
-  const containerClasses =
-    messages.length === 0 && !isTyping
-      ? "flex flex-col justify-start items-start min-h-full p-2 md:p-4" // If no messages and not typing, show pills at top (left-aligned)
-      : "flex flex-col px-2 pt-9 pb-40 md:px-2 md:pt-4 md:pb-30 max-w-4xl mx-auto"; // Otherwise, use the standard chat layout
+  const containerClasses = "flex flex-col flex-1 p-8 w-full";
 
   return (
     <div className={containerClasses}>

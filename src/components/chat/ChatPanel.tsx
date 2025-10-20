@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useChatState } from "@/hooks/useChatState";
 import ChatContainer from "./ChatContainer";
 import ChatInput from "./ChatInput";
@@ -11,6 +11,8 @@ type ChatPanelProps = {
 
 const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const messagesWrapperRef = useRef<HTMLDivElement | null>(null);
+  const inputWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const {
     messages,
@@ -26,8 +28,15 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
     resetChat,
   } = useChatState({ variant, apiUrl });
 
+  // Keep fixed small bottom padding to reserve space for the input/pills
+  useEffect(() => {
+    const messagesEl = messagesWrapperRef.current;
+    if (!messagesEl) return;
+    messagesEl.style.paddingBottom = `12px`;
+  }, []);
+
   return (
-    <div className="w-[360px] max-w-full max-h-[600px] h-[520px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+  <div className="w-[360px] max-w-full max-h-[600px] h-[500px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
       {/* Header (compact) */}
       <div className="flex items-center justify-between px-4 py-3 border-b">
         <div className="flex items-center gap-3">
@@ -46,12 +55,12 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-3 pb-24">
+      <div ref={messagesWrapperRef} className="flex-1 overflow-y-auto p-0">
         <ChatContainer messages={messages} isTyping={isTyping} files={files} pills={pills} onPillClick={setInputValue} />
       </div>
 
       {/* Input area */}
-  <div className="p-3 border-t mt-1">
+  <div ref={inputWrapperRef} className="p-2 border-t mt-1">
 
         <ChatInput
           value={inputValue}
