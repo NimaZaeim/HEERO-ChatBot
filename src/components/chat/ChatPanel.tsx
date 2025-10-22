@@ -40,16 +40,19 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
       {/* Header (compact) */}
       <div className="flex items-center justify-between px-4 py-3 border-b">
         <div className="flex items-center gap-3">
-          <img src="/heero-favicon.png" alt="logo" className="w-8 h-8 object-contain" />
-          <div className="text-sm font-semibold">HEERO Chat</div>
+          <img src="/heero-logo.svg" alt="logo" className="w-8 h-8 object-contain rounded-full" />
+          <div className="leading-tight">
+            <div className="text-sm font-semibold">Ihr HEERO Assistant</div>
+            <div className="text-xs text-gray-500">Schnelle Antworten zu HEERO</div>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <button
-            aria-label="Close chat"
-            className="text-sm text-gray-500 hover:text-gray-700"
+            aria-label="Minimize chat"
+            className="text-sm text-black hover:text-gray-700"
             onClick={() => onClose?.()}
           >
-            ✕
+            &#x2013; {/* en dash as a minimize glyph */}
           </button>
         </div>
       </div>
@@ -72,7 +75,24 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
           onFileButtonClick={() => fileInputRef.current?.click()}
           hasFiles={files.length > 0}
           disabled={isTyping}
-          fileBubbles={null}
+          fileBubbles={
+            files.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {files.map((f, i) => (
+                  <div key={i} className="flex items-center gap-2 bg-white/80 px-2 py-1 rounded shadow-sm border">
+                    <span className="text-xs text-[color:var(--neutral-dark)]">{f.name}</span>
+                    <button
+                      onClick={() => handleFileRemove(i)}
+                      className="text-xs text-gray-500 hover:text-gray-700"
+                      aria-label={`Remove ${f.name}`}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : null
+          }
         />
 
         <input

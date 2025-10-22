@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Send, Paperclip, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -16,7 +17,7 @@ type ChatInputProps = {
 const ChatInput = ({
   onSendMessage,
   disabled = false,
-  placeholder = "Fragen Sie uns zu eMobilität...",
+  placeholder = "Wie kann ich Ihnen heute helfen?",
   value = "",
   onChange,
   onFileButtonClick,
@@ -26,6 +27,44 @@ const ChatInput = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [visible, setVisible] = useState(false);
+  const infoBtnRef = useRef<HTMLButtonElement | null>(null);
+  const [tipStyle, setTipStyle] = useState<React.CSSProperties | null>(null);
+
+  // compute tooltip position when visible changes or window changes
+  useEffect(() => {
+    if (!visible || !infoBtnRef.current) {
+      setTipStyle(null);
+      return;
+    }
+
+    const update = () => {
+      const btn = infoBtnRef.current;
+      if (!btn) return;
+      const rect = btn.getBoundingClientRect();
+      const maxWidth = 320; // match CSS max-w
+      // center tooltip horizontally above the button
+      const left = Math.min(
+        Math.max(window.scrollX + rect.left + rect.width / 2 - maxWidth / 2, 8),
+        window.scrollX + window.innerWidth - 8 - maxWidth
+      );
+      const top = window.scrollY + rect.top - 8; // place tooltip above the button with small gap
+
+      setTipStyle({
+        left: `${left}px`,
+        top: `${top}px`,
+        transform: "translateY(-100%)",
+        maxWidth: `${maxWidth}px`,
+      });
+    };
+
+    update();
+    window.addEventListener("resize", update, { passive: true });
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update);
+    };
+  }, [visible]);
 
   // Auto-resize the textarea based on content
   useEffect(() => {
@@ -95,6 +134,7 @@ const ChatInput = ({
 
           <div className="relative inline-block">
             <button
+              ref={infoBtnRef}
               onClick={() => setVisible((v) => !v)}
               className="rounded-full border-none flex items-center justify-center"
               aria-label="Datenschutzhinweis"
@@ -103,9 +143,17 @@ const ChatInput = ({
             </button>
 
             {visible && (
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 bg-[color:var(--secondary-darkblue)] text-white text-xs px-3 py-2 rounded shadow-md max-w-[70vw] w-max">
-                Ihre Dokumente und Daten werden DSGVO-konform behandelt.
-              </div>
+              // Render tooltip into a portal so it won't be clipped by overflow: hidden parents
+              createPortal(
+                <div
+                  role="tooltip"
+                  className="z-50 fixed bg-[color:var(--secondary-darkblue)] text-white text-xs px-3 py-2 rounded shadow-md max-w-[320px] w-auto break-words whitespace-normal"
+                  style={tipStyle || { left: 0, top: 0 }}
+                >
+                  Ihre Dokumente und Daten werden DSGVO-konform behandelt. Weitere Informationen finden Sie in unserer Datenschutzerklärung.
+                </div>,
+                document.body
+              )
             )}
           </div>
         </div>

@@ -92,6 +92,9 @@
   animation: scaleUp 180ms cubic-bezier(.2,.9,.3,1) both;
 }
 
+/* Smooth transition timing utility used by widget */
+.duration-240 { transition-duration: 240ms; }
+
 /* New message slide/fade */
 @keyframes slideFadeIn {
   from { opacity: 0; transform: translateY(6px); }
@@ -105,6 +108,8 @@
 @media (max-width: 420px) {
   .w-\[360px\] { width: calc(100vw - 32px) !important; }
   .h-\[520px\] { height: calc(70vh) !important; }
+  /* Make expanded pill narrower on small screens */
+  .fixed.bottom-6.right-6 .group > div.absolute { right: 8px; }
 }
 
 .delay-150 {
