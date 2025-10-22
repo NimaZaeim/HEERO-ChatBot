@@ -4,5 +4,7 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+// Embedded iframe size reporter (posts size to parent when ?embedded=true)
+import './embedded-size-reporter'
 
 createRoot(document.getElementById("root")!).render(<App />);
