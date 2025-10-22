@@ -66,7 +66,7 @@ const MessageList = ({ messages, isTyping, pills = [], onPillClick }: MessageLis
         key={message.id}
         className={`${
           message.isUser ? "items-end" : "items-start"
-        } flex flex-col w-full mb-2 md:mb-1 message-enter`}
+        } flex flex-col w-full mb-4 md:mb-3 message-enter`}
       >
         {message.files?.length > 0 && ( // If the message has files, render them in a bubble
           <div
