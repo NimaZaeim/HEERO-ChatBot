@@ -22,6 +22,7 @@ export default {
 			colors: {
 				// Design System Colors
 				'primary-300': 'var(--primary-300)',
+				'primary-600': 'var(--primary-600)',
 				'solar-spirit': 'var(--solar-spirit)',
 				'white': 'var(--white)',
 				'white-300': 'var(--white-300)',

@@ -10,6 +10,7 @@
   :root {
     /* Design System Colors */
     --primary-300: #87CEEB; /* Primary - 300 (Light Blue) */
+    --primary-600: #4A90C2; /* Primary - 600 (Darker Blue for better contrast) */
     --solar-spirit: #F0A83C; /* Solar Spirit (Orange) */
     --white: #FFFFFF; /* White */
     --white-300: #F5F5F5; /* White - 300 (Light Gray) */

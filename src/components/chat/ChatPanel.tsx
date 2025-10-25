@@ -43,13 +43,13 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
           <img src="/heero-logo.svg" alt="logo" className="w-8 h-8 object-contain rounded-full" />
           <div className="leading-tight">
             <div className="text-sm font-semibold">Ihr HEERO Assistant</div>
-            <div className="text-xs text-gray-500">Schnelle Antworten zu HEERO</div>
+            <div className="text-xs text-[color:var(--neutral-grey)]">Schnelle Antworten zu HEERO</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             aria-label="Minimize chat"
-            className="text-sm text-black hover:text-gray-700"
+            className="text-sm text-[color:var(--neutral-dark)] hover:text-[color:var(--neutral-grey)]"
             onClick={() => onClose?.()}
           >
             &#x2013; {/* en dash as a minimize glyph */}
@@ -83,7 +83,7 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
                     <span className="text-xs text-[color:var(--neutral-dark)]">{f.name}</span>
                     <button
                       onClick={() => handleFileRemove(i)}
-                      className="text-xs text-gray-500 hover:text-gray-700"
+                      className="text-xs text-[color:var(--neutral-grey)] hover:text-[color:var(--neutral-dark)]"
                       aria-label={`Remove ${f.name}`}
                     >
                       ×

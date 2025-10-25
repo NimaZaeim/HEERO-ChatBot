@@ -66,15 +66,15 @@ const ChatHeader = ({ onResetChat }: ChatHeaderProps) => {
                 </span>
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white border border-gray-200 shadow-xl">
+            <AlertDialogContent className="bg-[color:var(--white)] border border-[color:var(--white-300)] shadow-xl">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-black">Chat zurücksetzen?</AlertDialogTitle>
-                <AlertDialogDescription className="text-gray-600">
+                <AlertDialogTitle className="text-[color:var(--neutral-dark)]">Chat zurücksetzen?</AlertDialogTitle>
+                <AlertDialogDescription className="text-[color:var(--neutral-grey)]">
                   Der gesamte Chatverlauf wird gelöscht. Dies kann nicht rückgängig gemacht werden.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="bg-gray-100 text-gray-700 hover:bg-gray-200">
+                <AlertDialogCancel className="bg-[color:var(--white-300)] text-[color:var(--neutral-grey)] hover:bg-[color:var(--transparent-20)]">
                   Abbrechen
                 </AlertDialogCancel>
                 <AlertDialogAction 
@@ -92,7 +92,7 @@ const ChatHeader = ({ onResetChat }: ChatHeaderProps) => {
         <Button
           asChild
           variant="default"
-          className="text-xs px-3 py-1.5 md:text-sm md:px-4 md:py-2 bg-[color:var(--primary-blue)] hover:bg-[color:var(--primary-hover)] text-white"
+          className="text-xs px-3 py-1.5 md:text-sm md:px-4 md:py-2 bg-[color:var(--primary-600)] hover:bg-[color:var(--primary-hover)] text-white"
         >
           <a
             href="https://www.heero-motors.de/probefahrt"

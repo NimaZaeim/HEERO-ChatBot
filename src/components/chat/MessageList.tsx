@@ -137,7 +137,7 @@ const MessageList = ({ messages, isTyping, pills = [], onPillClick }: MessageLis
                   <button
                     key={idx}
                     onClick={() => onPillClick?.(pill)}
-                    className="text-xs px-2 py-1 rounded-full bg-[color:var(--secondary-lightblue)] shadow-sm text-[color:var(--neutral-dark)] hover:bg-[color:var(--secondary-accent)] whitespace-nowrap border-none"
+                    className="text-xs px-2 py-1 rounded-full bg-[color:var(--primary-600)] shadow-sm text-white hover:bg-[color:var(--secondary-accent)] whitespace-nowrap border-none"
                   >
                     {pill}
                   </button>

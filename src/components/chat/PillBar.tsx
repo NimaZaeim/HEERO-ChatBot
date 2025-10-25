@@ -17,7 +17,7 @@ const PillBar = ({ pills, onPillClick }: PillBarProps) => {
         <button
           key={index}
           onClick={() => onPillClick(pill)}
-          className="text-xs px-3 py-1 rounded-full bg-[color:var(--secondary-lightblue)] shadow-sm text-[color:var(--neutral-dark)] hover:bg-[color:var(--secondary-accent)] hover:text-white whitespace-nowrap"
+          className="text-xs px-3 py-1 rounded-full bg-[color:var(--primary-600)] shadow-sm text-white hover:bg-[color:var(--secondary-accent)] hover:text-white whitespace-nowrap"
           title={pill}
         >
           <span className="truncate max-w-[70vw] md:max-w-none">{pill}</span>

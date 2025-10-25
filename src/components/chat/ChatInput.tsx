@@ -164,7 +164,7 @@ const ChatInput = ({
           disabled={!canSend}
           size="icon"
           variant="default"
-          className="rounded-xl bg-[color:var(--primary-blue)] hover:bg-[color:var(--primary-hover)] text-white disabled:opacity-50 h-10"
+          className="rounded-xl bg-[color:var(--primary-600)] hover:bg-[color:var(--primary-hover)] text-white disabled:opacity-50 h-10"
           aria-label="Nachricht senden"
         >
           <Send size={18} />

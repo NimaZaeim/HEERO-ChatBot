@@ -1,9 +1,11 @@
 import React, { useState, Suspense, lazy } from "react";
+import { useIsMobileOrTablet } from "../../hooks/use-mobile";
 
 const ChatPanel = lazy(() => import("./ChatPanel"));
 
 const ChatWidget = () => {
   const [open, setOpen] = useState(false);
+  const isMobileOrTablet = useIsMobileOrTablet();
 
   // Helpers: open/close/toggle with postMessage to parent (for iframe embed)
   const postParent = (msg: any) => {
@@ -42,7 +44,7 @@ const ChatWidget = () => {
               <button
               aria-label="Open chat"
               onClick={() => toggleChat()}
-              className="relative w-14 h-14 rounded-full overflow-hidden border-4 border-white shadow-[0_8px_30px_rgba(0,0,0,0.28)] bg-white flex items-center justify-center transition-transform transform-gpu group-hover:scale-95 focus:scale-95"
+              className={`relative w-14 h-14 rounded-full overflow-hidden border-4 border-white shadow-[0_8px_30px_rgba(0,0,0,0.28)] bg-white flex items-center justify-center transition-transform transform-gpu ${!isMobileOrTablet ? 'group-hover:scale-95 focus:scale-95' : 'focus:scale-95'}`}
             >
               <img src="/heero-logo.svg" alt="avatar" className="w-full h-full object-cover" />
               {/* persistent green presence dot */}
@@ -50,8 +52,8 @@ const ChatWidget = () => {
             </button>
           )}
 
-          {/* Expanding pill - hidden by default, slides in from the right on hover/focus */}
-          {!open && (
+          {/* Expanding pill - hidden by default, slides in from the right on hover/focus - COMPLETELY HIDDEN on mobile/tablet */}
+          {!open && !isMobileOrTablet && (
               <div className="absolute right-16 top-1/2 -translate-y-1/2 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0 group-hover:pointer-events-auto group-focus-within:pointer-events-auto pointer-events-none transition-all duration-240 ease-out">
               <div onClick={() => openChat()} role="button" tabIndex={0} className="inline-flex items-center gap-4 bg-white text-[color:var(--neutral-dark)] px-4 py-2 rounded-full shadow-[0_18px_40px_rgba(0,0,0,0.25)] border border-[rgba(0,0,0,0.06)] cursor-pointer whitespace-nowrap w-auto">
                 {/* Text block only (no duplicated avatar) - single-line */}
