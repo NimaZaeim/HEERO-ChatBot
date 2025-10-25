@@ -9,6 +9,25 @@ export default {
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
 	],
+	safelist: [
+		'group-hover:scale-95',
+		'group-hover:scale-100',
+		'group-hover:opacity-100',
+		'group-hover:translate-x-0',
+		'group-hover:pointer-events-auto',
+		'group-focus-within:opacity-100',
+		'group-focus-within:translate-x-0',
+		'group-focus-within:pointer-events-auto',
+		'focus:scale-95',
+		'duration-240',
+		'ease-out',
+		'transition-all',
+		'transition-transform',
+		'transform-gpu',
+		'animate-scale-up',
+		'message-enter',
+		'no-scrollbar'
+	],
 	prefix: "",
 	theme: {
 		container: {

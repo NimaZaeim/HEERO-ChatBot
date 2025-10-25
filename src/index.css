@@ -96,6 +96,13 @@
 /* Smooth transition timing utility used by widget */
 .duration-240 { transition-duration: 240ms; }
 
+/* Ensure hover states are preserved in production builds */
+.group:hover .group-hover\:scale-95 { transform: scale(0.95); }
+.group:hover .group-hover\:scale-100 { transform: scale(1); }
+.group:hover .group-hover\:opacity-100 { opacity: 1; }
+.group:hover .group-hover\:translate-x-0 { transform: translateX(0); }
+.group:hover .group-hover\:pointer-events-auto { pointer-events: auto; }
+
 /* New message slide/fade */
 @keyframes slideFadeIn {
   from { opacity: 0; transform: translateY(6px); }
