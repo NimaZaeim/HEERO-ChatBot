@@ -26,7 +26,15 @@ export default {
 		'transform-gpu',
 		'animate-scale-up',
 		'message-enter',
-		'no-scrollbar'
+		'no-scrollbar',
+		'opacity-100',
+		'opacity-0',
+		'translate-x-0',
+		'translate-x-4',
+		'pointer-events-auto',
+		'pointer-events-none',
+		'mr-2',
+		'mr-0'
 	],
 	prefix: "",
 	theme: {

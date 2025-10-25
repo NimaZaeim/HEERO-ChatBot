@@ -1,11 +1,30 @@
-import React, { useState, Suspense, lazy } from "react";
+import React, { useState, Suspense, lazy, useEffect, useRef } from "react";
 import { useIsMobileOrTablet } from "../../hooks/use-mobile";
 
 const ChatPanel = lazy(() => import("./ChatPanel"));
 
 const ChatWidget = () => {
   const [open, setOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const isMobileOrTablet = useIsMobileOrTablet();
+  const groupRef = useRef<HTMLDivElement>(null);
+
+  // JavaScript-based hover detection for iframe contexts
+  useEffect(() => {
+    const groupElement = groupRef.current;
+    if (!groupElement || isMobileOrTablet) return;
+
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
+
+    groupElement.addEventListener('mouseenter', handleMouseEnter);
+    groupElement.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      groupElement.removeEventListener('mouseenter', handleMouseEnter);
+      groupElement.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [isMobileOrTablet]);
 
   // Helpers: open/close/toggle with postMessage to parent (for iframe embed)
   const postParent = (msg: any) => {
@@ -36,9 +55,22 @@ const ChatWidget = () => {
   return (
     <div>
       {/* Floating bubble */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+      <div className="fixed bottom-6 right-6 z-50">
         {/* Avatar-only circle by default; expands to pill on hover/focus. When open, hide the avatar and show the panel in the same place. */}
-  <div className="relative group" tabIndex={0}>
+        <div ref={groupRef} className="relative group flex items-center" tabIndex={0}>
+          {/* Expanding pill - hidden by default, slides in from the right on hover/focus - COMPLETELY HIDDEN on mobile/tablet */}
+          {!open && !isMobileOrTablet && (
+              <div className={`transition-all duration-240 ease-out ${isHovered ? 'opacity-100 translate-x-0 pointer-events-auto mr-2' : 'opacity-0 translate-x-4 pointer-events-none mr-0'} group-focus-within:opacity-100 group-focus-within:translate-x-0 group-focus-within:pointer-events-auto group-focus-within:mr-2`}>
+              <div onClick={() => openChat()} role="button" tabIndex={0} className="inline-flex items-center gap-4 bg-white text-[color:var(--neutral-dark)] px-4 py-2 rounded-full shadow-[0_18px_40px_rgba(0,0,0,0.25)] border border-[rgba(0,0,0,0.06)] cursor-pointer whitespace-nowrap w-auto">
+                {/* Text block only (no duplicated avatar) - single-line */}
+                <div className="flex flex-col items-start text-left leading-tight">
+                  <span className="font-semibold text-sm">Schnelle Antworten zu HEERO</span>
+                  <span className="text-sm text-[#6b7280]">Ihr HEERO Assistant</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Avatar circle (default) */}
           {!open && (
               <button
@@ -50,19 +82,6 @@ const ChatWidget = () => {
               {/* persistent green presence dot */}
               <span className="absolute bottom-1 right-1 w-3 h-3 bg-[#22c55e] rounded-full border-2 border-white" />
             </button>
-          )}
-
-          {/* Expanding pill - hidden by default, slides in from the right on hover/focus - COMPLETELY HIDDEN on mobile/tablet */}
-          {!open && !isMobileOrTablet && (
-              <div className="absolute right-16 top-1/2 -translate-y-1/2 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0 group-hover:pointer-events-auto group-focus-within:pointer-events-auto pointer-events-none transition-all duration-240 ease-out">
-              <div onClick={() => openChat()} role="button" tabIndex={0} className="inline-flex items-center gap-4 bg-white text-[color:var(--neutral-dark)] px-4 py-2 rounded-full shadow-[0_18px_40px_rgba(0,0,0,0.25)] border border-[rgba(0,0,0,0.06)] cursor-pointer whitespace-nowrap w-auto">
-                {/* Text block only (no duplicated avatar) - single-line */}
-                <div className="flex flex-col items-start text-left leading-tight">
-                  <span className="font-semibold text-sm">Schnelle Antworten zu HEERO</span>
-                  <span className="text-sm text-[#6b7280]">Ihr HEERO Assistant</span>
-                </div>
-              </div>
-            </div>
           )}
         </div>
       </div>

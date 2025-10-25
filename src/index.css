@@ -103,6 +103,34 @@
 .group:hover .group-hover\:translate-x-0 { transform: translateX(0); }
 .group:hover .group-hover\:pointer-events-auto { pointer-events: auto; }
 
+/* Force hover states to work in iframe context */
+.group:hover .group-hover\:scale-95,
+.group:hover .group-hover\:scale-100,
+.group:hover .group-hover\:opacity-100,
+.group:hover .group-hover\:translate-x-0,
+.group:hover .group-hover\:pointer-events-auto {
+  transition: all 240ms ease-out !important;
+}
+
+/* Additional iframe-specific hover fixes */
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.group:hover .group-hover\:translate-x-0 {
+  transform: translateX(0) !important;
+}
+
+/* Ensure pill visibility in iframe contexts */
+.group:hover .transition-all {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  margin-right: 0.5rem !important;
+}
+
 /* New message slide/fade */
 @keyframes slideFadeIn {
   from { opacity: 0; transform: translateY(6px); }
