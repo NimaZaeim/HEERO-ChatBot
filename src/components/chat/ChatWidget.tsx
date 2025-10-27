@@ -7,6 +7,7 @@ const ChatWidget = () => {
   const [open, setOpen] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const isMobileOrTablet = useIsMobileOrTablet();
+  const [parentViewportWidth, setParentViewportWidth] = useState<number | null>(null);
   const AVATAR_SIZE_PX = 60; // matches w-[60px] h-[60px]
   const GAP_PX = 12; // matches mr-3
   const SLIDE_PX = AVATAR_SIZE_PX - 8; // slide under the icon without overshooting
@@ -17,6 +18,24 @@ const ChatWidget = () => {
       setDialogVisible(true);
     }, 100);
     return () => clearTimeout(timer);
+  }, []);
+
+  // When embedded, prefer using the parent page viewport width to decide mobile vs desktop
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      try {
+        const data = event.data as any;
+        if (data && data.type === 'embed-parent-viewport' && typeof data.width === 'number') {
+          setParentViewportWidth(data.width);
+        }
+      } catch (_) {}
+    };
+    window.addEventListener('message', onMessage);
+    // Ask parent for current viewport width (parent script may respond)
+    try {
+      window.parent.postMessage({ type: 'heero-viewport-request' }, '*');
+    } catch (_) {}
+    return () => window.removeEventListener('message', onMessage);
   }, []);
 
   // Helpers: open/close/toggle with postMessage to parent (for iframe embed)
@@ -86,8 +105,8 @@ const ChatWidget = () => {
               </span>
             </button>
 
-            {/* Dialog Pill - desktop/tablet only */}
-            {!isMobileOrTablet && (
+            {/* Dialog Pill - desktop/tablet only (decided based on parent viewport if available) */}
+            {!(parentViewportWidth !== null ? parentViewportWidth < 810 : isMobileOrTablet) && (
               <div 
                 className={`relative flex items-center bg-white rounded-full shadow-[0_18px_40px_rgba(0,0,0,0.25)] border border-[rgba(0,0,0,0.06)] pl-2 pr-16 py-2.5 mr-1 transition-[transform,opacity] duration-500 ease-out`}
                 style={{ transform: dialogVisible ? 'translateX(0px)' : `translateX(${SLIDE_PX}px)`, opacity: dialogVisible ? 1 : 0 }}
