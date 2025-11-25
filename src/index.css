@@ -45,6 +45,13 @@
     color: var(--neutral-dark);
   }
 
+  /* Prevent scroll chaining on Safari when chatbot is open */
+  body.chatbot-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+  }
+
   /* Apply specific styles for HTML content in chat bubbles */
   .chat-content p {
     @apply mb-2 last:mb-0;

@@ -35,6 +35,54 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
     messagesEl.style.paddingBottom = `12px`;
   }, []);
 
+  // Prevent scroll propagation to parent (Safari fix)
+  useEffect(() => {
+    const messagesEl = messagesWrapperRef.current;
+    if (!messagesEl) return;
+
+    let touchStartY = 0;
+
+    const handleWheel = (e: WheelEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = messagesEl;
+      const isAtTop = scrollTop <= 1;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+      
+      // Prevent scroll propagation if we're at boundaries and trying to scroll beyond
+      if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = messagesEl;
+      const isAtTop = scrollTop <= 1;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+      const touchY = e.touches[0].clientY;
+      const deltaY = touchY - touchStartY;
+      
+      // Prevent scroll propagation if we're at boundaries and trying to scroll beyond
+      if ((isAtTop && deltaY > 0) || (isAtBottom && deltaY < 0)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    messagesEl.addEventListener('wheel', handleWheel, { passive: false });
+    messagesEl.addEventListener('touchstart', handleTouchStart, { passive: true });
+    messagesEl.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    return () => {
+      messagesEl.removeEventListener('wheel', handleWheel);
+      messagesEl.removeEventListener('touchstart', handleTouchStart);
+      messagesEl.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, []);
+
   return (
   <div className="w-[360px] max-w-full max-h-[600px] h-[500px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
       {/* Header (compact) */}
@@ -58,7 +106,15 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
       </div>
 
       {/* Messages */}
-      <div ref={messagesWrapperRef} className="flex-1 overflow-y-auto p-0">
+      <div 
+        ref={messagesWrapperRef} 
+        className="flex-1 overflow-y-auto p-0"
+        style={{ 
+          overscrollBehavior: 'contain',
+          WebkitOverflowScrolling: 'touch',
+          touchAction: 'pan-y'
+        }}
+      >
         <ChatContainer messages={messages} isTyping={isTyping} files={files} pills={pills} onPillClick={setInputValue} />
       </div>
 
