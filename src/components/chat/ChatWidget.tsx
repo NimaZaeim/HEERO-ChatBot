@@ -74,31 +74,6 @@ const ChatWidget = () => {
       const originalHtmlOverflow = html.style.overflow;
       html.style.overflow = 'hidden';
       
-      // Prevent scroll events at document level that might escape
-      const handleDocumentWheel = (e: WheelEvent) => {
-        // Only prevent if the event target is not within the chatbot
-        const target = e.target as HTMLElement;
-        const chatbotPanel = document.querySelector('[class*="w-\\[360px\\]"]');
-        if (chatbotPanel && chatbotPanel.contains(target)) {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-        }
-      };
-      
-      const handleDocumentTouchMove = (e: TouchEvent) => {
-        const target = e.target as HTMLElement;
-        const chatbotPanel = document.querySelector('[class*="w-\\[360px\\]"]');
-        if (chatbotPanel && chatbotPanel.contains(target)) {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-        }
-      };
-      
-      document.addEventListener('wheel', handleDocumentWheel, { passive: false, capture: true });
-      document.addEventListener('touchmove', handleDocumentTouchMove, { passive: false, capture: true });
-      
       return () => {
         // Remove class
         document.body.classList.remove('chatbot-open');
@@ -111,10 +86,6 @@ const ChatWidget = () => {
         document.body.style.height = originalHeight;
         
         html.style.overflow = originalHtmlOverflow;
-        
-        // Remove event listeners
-        document.removeEventListener('wheel', handleDocumentWheel, { capture: true } as any);
-        document.removeEventListener('touchmove', handleDocumentTouchMove, { capture: true } as any);
         
         // Restore scroll position
         window.scrollTo(0, scrollY);

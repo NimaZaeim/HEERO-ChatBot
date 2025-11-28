@@ -35,35 +35,29 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
     messagesEl.style.paddingBottom = `12px`;
   }, []);
 
-  // Prevent ALL scroll events from propagating to parent page
+  // Prevent scroll events from propagating to parent page while allowing internal scrolling
   useEffect(() => {
     const messagesEl = messagesWrapperRef.current;
     if (!messagesEl) return;
 
     let touchStartY = 0;
-    let isScrolling = false;
 
-    // Stop all wheel events from propagating to parent
+    // Handle wheel events - only prevent at boundaries, but always stop propagation to parent
     const handleWheel = (e: WheelEvent) => {
       const { scrollTop, scrollHeight, clientHeight } = messagesEl;
       const isAtTop = scrollTop <= 1;
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
       
-      // If we're at boundaries and trying to scroll beyond, prevent it
+      // If we're at boundaries and trying to scroll beyond, prevent default
       if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
         e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-      } else {
-        // Even when scrolling normally, stop propagation to prevent parent page scroll
-        e.stopPropagation();
-        e.stopImmediatePropagation();
       }
+      // Always stop propagation to parent, but allow normal scrolling within
+      e.stopPropagation();
     };
 
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
-      isScrolling = false;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
@@ -73,63 +67,28 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
       const touchY = e.touches[0].clientY;
       const deltaY = touchY - touchStartY;
       
-      // If we're at boundaries and trying to scroll beyond, prevent it
+      // If we're at boundaries and trying to scroll beyond, prevent default
       if ((isAtTop && deltaY > 0) || (isAtBottom && deltaY < 0)) {
         e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-      } else {
-        // Even when scrolling normally, stop propagation to prevent parent page scroll
-        isScrolling = true;
-        e.stopPropagation();
-        e.stopImmediatePropagation();
       }
+      // Always stop propagation to parent, but allow normal scrolling within
+      e.stopPropagation();
     };
 
-    const handleTouchEnd = () => {
-      isScrolling = false;
-    };
-
-    // Use capture phase to catch events before they bubble
-    messagesEl.addEventListener('wheel', handleWheel, { passive: false, capture: true });
-    messagesEl.addEventListener('touchstart', handleTouchStart, { passive: true, capture: true });
-    messagesEl.addEventListener('touchmove', handleTouchMove, { passive: false, capture: true });
-    messagesEl.addEventListener('touchend', handleTouchEnd, { passive: true, capture: true });
+    // Use bubbling phase (not capture) so events can work normally for internal scrolling
+    messagesEl.addEventListener('wheel', handleWheel, { passive: false });
+    messagesEl.addEventListener('touchstart', handleTouchStart, { passive: true });
+    messagesEl.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
-      messagesEl.removeEventListener('wheel', handleWheel, { capture: true } as any);
-      messagesEl.removeEventListener('touchstart', handleTouchStart, { capture: true } as any);
-      messagesEl.removeEventListener('touchmove', handleTouchMove, { capture: true } as any);
-      messagesEl.removeEventListener('touchend', handleTouchEnd, { capture: true } as any);
+      messagesEl.removeEventListener('wheel', handleWheel);
+      messagesEl.removeEventListener('touchstart', handleTouchStart);
+      messagesEl.removeEventListener('touchmove', handleTouchMove);
     };
   }, []);
 
-  // Prevent scroll events on the entire panel from propagating
+  // Panel ref for styling
   const panelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const panelEl = panelRef.current;
-    if (!panelEl) return;
-
-    // Catch any scroll events that escape the messages container
-    const handleWheel = (e: WheelEvent) => {
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-    };
-
-    panelEl.addEventListener('wheel', handleWheel, { passive: false, capture: true });
-    panelEl.addEventListener('touchmove', handleTouchMove, { passive: false, capture: true });
-
-    return () => {
-      panelEl.removeEventListener('wheel', handleWheel, { capture: true } as any);
-      panelEl.removeEventListener('touchmove', handleTouchMove, { capture: true } as any);
-    };
-  }, []);
 
   return (
   <div 
