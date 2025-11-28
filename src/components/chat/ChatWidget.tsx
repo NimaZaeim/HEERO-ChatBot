@@ -74,7 +74,36 @@ const ChatWidget = () => {
       const originalHtmlOverflow = html.style.overflow;
       html.style.overflow = 'hidden';
       
+      // Add document-level listeners in capture phase as a safety net
+      // These catch any scroll events that might escape the chatbot area
+      const handleDocumentWheel = (e: WheelEvent) => {
+        const target = e.target as HTMLElement;
+        const chatbotPanel = document.querySelector('[class*="w-\\[360px\\]"]');
+        // If event is within chatbot, stop it from reaching body/document
+        if (chatbotPanel && chatbotPanel.contains(target)) {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+      };
+      
+      const handleDocumentTouchMove = (e: TouchEvent) => {
+        const target = e.target as HTMLElement;
+        const chatbotPanel = document.querySelector('[class*="w-\\[360px\\]"]');
+        // If event is within chatbot, stop it from reaching body/document
+        if (chatbotPanel && chatbotPanel.contains(target)) {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+      };
+      
+      // Use capture phase to catch events before they reach body
+      document.addEventListener('wheel', handleDocumentWheel, { passive: false, capture: true });
+      document.addEventListener('touchmove', handleDocumentTouchMove, { passive: false, capture: true });
+      
       return () => {
+        // Remove document listeners
+        document.removeEventListener('wheel', handleDocumentWheel, { capture: true } as any);
+        document.removeEventListener('touchmove', handleDocumentTouchMove, { capture: true } as any);
         // Remove class
         document.body.classList.remove('chatbot-open');
         
