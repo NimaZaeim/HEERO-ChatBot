@@ -54,6 +54,7 @@ const ChatWidget = () => {
       const originalPosition = document.body.style.position;
       const originalTop = document.body.style.top;
       const originalWidth = document.body.style.width;
+      const originalHeight = document.body.style.height;
       
       // Get current scroll position
       const scrollY = window.scrollY;
@@ -63,13 +64,57 @@ const ChatWidget = () => {
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
+      document.body.style.height = '100%';
+      
+      // Add class for CSS-based scroll lock
+      document.body.classList.add('chatbot-open');
+      
+      // Also lock html element
+      const html = document.documentElement;
+      const originalHtmlOverflow = html.style.overflow;
+      html.style.overflow = 'hidden';
+      
+      // Prevent scroll events at document level that might escape
+      const handleDocumentWheel = (e: WheelEvent) => {
+        // Only prevent if the event target is not within the chatbot
+        const target = e.target as HTMLElement;
+        const chatbotPanel = document.querySelector('[class*="w-\\[360px\\]"]');
+        if (chatbotPanel && chatbotPanel.contains(target)) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+      };
+      
+      const handleDocumentTouchMove = (e: TouchEvent) => {
+        const target = e.target as HTMLElement;
+        const chatbotPanel = document.querySelector('[class*="w-\\[360px\\]"]');
+        if (chatbotPanel && chatbotPanel.contains(target)) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
+      };
+      
+      document.addEventListener('wheel', handleDocumentWheel, { passive: false, capture: true });
+      document.addEventListener('touchmove', handleDocumentTouchMove, { passive: false, capture: true });
       
       return () => {
+        // Remove class
+        document.body.classList.remove('chatbot-open');
+        
         // Restore original styles
         document.body.style.overflow = originalOverflow;
         document.body.style.position = originalPosition;
         document.body.style.top = originalTop;
         document.body.style.width = originalWidth;
+        document.body.style.height = originalHeight;
+        
+        html.style.overflow = originalHtmlOverflow;
+        
+        // Remove event listeners
+        document.removeEventListener('wheel', handleDocumentWheel, { capture: true } as any);
+        document.removeEventListener('touchmove', handleDocumentTouchMove, { capture: true } as any);
         
         // Restore scroll position
         window.scrollTo(0, scrollY);
@@ -106,7 +151,16 @@ const ChatWidget = () => {
         <div 
           className="fixed bottom-6 right-6 z-50"
           style={{ 
-            overscrollBehavior: 'contain'
+            overscrollBehavior: 'contain',
+            isolation: 'isolate'
+          }}
+          onWheel={(e) => {
+            // Prevent wheel events from propagating to parent
+            e.stopPropagation();
+          }}
+          onTouchMove={(e) => {
+            // Prevent touch events from propagating to parent
+            e.stopPropagation();
           }}
         >
           <Suspense fallback={<div className="w-[360px] h-[480px] bg-white rounded-2xl shadow-lg flex items-center justify-center">Loading…</div>}>
