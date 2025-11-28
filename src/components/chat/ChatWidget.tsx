@@ -79,7 +79,7 @@ const ChatWidget = () => {
       const handleDocumentWheel = (e: WheelEvent) => {
         const target = e.target as HTMLElement;
         const chatbotPanel = document.querySelector('[class*="w-\\[360px\\]"]');
-        // If event is within chatbot, stop it from reaching body/document
+        // If event is within chatbot, stop propagation (but don't prevent default)
         if (chatbotPanel && chatbotPanel.contains(target)) {
           e.stopPropagation();
           e.stopImmediatePropagation();
@@ -89,7 +89,7 @@ const ChatWidget = () => {
       const handleDocumentTouchMove = (e: TouchEvent) => {
         const target = e.target as HTMLElement;
         const chatbotPanel = document.querySelector('[class*="w-\\[360px\\]"]');
-        // If event is within chatbot, stop it from reaching body/document
+        // If event is within chatbot, stop propagation (but don't prevent default)
         if (chatbotPanel && chatbotPanel.contains(target)) {
           e.stopPropagation();
           e.stopImmediatePropagation();

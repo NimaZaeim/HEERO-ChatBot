@@ -35,30 +35,26 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
     messagesEl.style.paddingBottom = `12px`;
   }, []);
 
-  // Prevent scroll events from propagating to parent page while allowing internal scrolling
+  // Prevent scroll events from reaching parent while allowing native scrolling
   useEffect(() => {
     const messagesEl = messagesWrapperRef.current;
     if (!messagesEl) return;
 
     let touchStartY = 0;
 
-    // Handle wheel events - use capture phase to stop propagation early, but allow normal scrolling
+    // Handle wheel events - stop propagation but allow native scroll
     const handleWheel = (e: WheelEvent) => {
       const { scrollTop, scrollHeight, clientHeight } = messagesEl;
       const isAtTop = scrollTop <= 1;
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
       
-      // If we're at boundaries and trying to scroll beyond, prevent default
+      // Only prevent default at boundaries to stop scroll chaining
       if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
         e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-      } else {
-        // For normal scrolling, don't prevent default (allow internal scroll)
-        // But stop propagation to prevent background scrolling
-        e.stopPropagation();
-        e.stopImmediatePropagation();
       }
+      // Always stop propagation to prevent parent scroll
+      e.stopPropagation();
+      e.stopImmediatePropagation();
     };
 
     const handleTouchStart = (e: TouchEvent) => {
@@ -72,20 +68,17 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
       const touchY = e.touches[0].clientY;
       const deltaY = touchY - touchStartY;
       
-      // If we're at boundaries and trying to scroll beyond, prevent default
+      // Only prevent default at boundaries to stop scroll chaining
       if ((isAtTop && deltaY > 0) || (isAtBottom && deltaY < 0)) {
         e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-      } else {
-        // For normal scrolling, don't prevent default (allow internal scroll)
-        // But stop propagation to prevent background scrolling
-        e.stopPropagation();
-        e.stopImmediatePropagation();
       }
+      // Always stop propagation to prevent parent scroll
+      e.stopPropagation();
+      e.stopImmediatePropagation();
     };
 
-    // Use capture phase to catch events early and prevent them from reaching document/body
+    // Use capture phase to catch events early and stop propagation before they reach document
+    // But don't prevent default for normal scrolling - let browser handle it
     messagesEl.addEventListener('wheel', handleWheel, { passive: false, capture: true });
     messagesEl.addEventListener('touchstart', handleTouchStart, { passive: true, capture: true });
     messagesEl.addEventListener('touchmove', handleTouchMove, { passive: false, capture: true });
@@ -106,13 +99,13 @@ const ChatPanel = ({ variant = "emobility", apiUrl, onClose }: ChatPanelProps) =
     if (!panelEl) return;
 
     const handleWheel = (e: WheelEvent) => {
-      // Only stop propagation, don't prevent default to allow internal scrolling
+      // Stop propagation but don't prevent default to allow scrolling
       e.stopPropagation();
       e.stopImmediatePropagation();
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      // Only stop propagation, don't prevent default to allow internal scrolling
+      // Stop propagation but don't prevent default to allow scrolling
       e.stopPropagation();
       e.stopImmediatePropagation();
     };
